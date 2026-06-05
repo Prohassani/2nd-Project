@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { OpenAI } = require('openai');
 require('dotenv').config();
 
@@ -14,8 +15,8 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Serve static files
-app.use(express.static('public'));
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -124,12 +125,12 @@ function parsePrompts(text) {
 
 // Serve index.html for root path
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: 'Not found' });
+// Fallback - serve index.html for any unmatched routes (for SPA routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // Error handler
@@ -139,7 +140,10 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Visit http://localhost:${PORT} to use the app`);
 });
+
+// Export for Vercel
+module.exports = app;
