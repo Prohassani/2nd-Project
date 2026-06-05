@@ -1,11 +1,6 @@
 {
   "version": 2,
   "buildCommand": "npm install",
-  "functions": {
-    "api/index.js": {
-      "runtime": "nodejs24.x"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
