@@ -1,7 +1,6 @@
 {
   "version": 2,
   "buildCommand": "npm install",
-  "public": "public",
   "functions": {
     "api/index.js": {
       "runtime": "nodejs18.x"
